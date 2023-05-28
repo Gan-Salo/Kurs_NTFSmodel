@@ -44,30 +44,44 @@ namespace WindowsFormsApp1
             this.chose_label = new System.Windows.Forms.Label();
             this.type_label = new System.Windows.Forms.Label();
             this.save_button = new System.Windows.Forms.Button();
+            this.filename_textBox = new System.Windows.Forms.TextBox();
+            this.okname_button = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.mft_label = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.clusters_label = new System.Windows.Forms.Label();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.tomstr_label = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.contextMenuStrip2.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 12);
+            this.dataGridView1.Location = new System.Drawing.Point(4, 53);
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
             this.dataGridView1.Size = new System.Drawing.Size(321, 299);
             this.dataGridView1.TabIndex = 0;
             // 
             // dataGridView2
             // 
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(339, 12);
+            this.dataGridView2.Location = new System.Drawing.Point(331, 53);
             this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(324, 299);
+            this.dataGridView2.Size = new System.Drawing.Size(258, 299);
             this.dataGridView2.TabIndex = 1;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 395);
+            this.button1.Location = new System.Drawing.Point(170, 358);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(155, 43);
             this.button1.TabIndex = 2;
@@ -77,7 +91,7 @@ namespace WindowsFormsApp1
             // 
             // treeView1
             // 
-            this.treeView1.Location = new System.Drawing.Point(669, 12);
+            this.treeView1.Location = new System.Drawing.Point(595, 53);
             this.treeView1.Name = "treeView1";
             this.treeView1.Size = new System.Drawing.Size(266, 299);
             this.treeView1.TabIndex = 3;
@@ -119,17 +133,17 @@ namespace WindowsFormsApp1
             // filecontent_textbox
             // 
             this.filecontent_textbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.filecontent_textbox.Location = new System.Drawing.Point(941, 49);
+            this.filecontent_textbox.Location = new System.Drawing.Point(6, 46);
             this.filecontent_textbox.Multiline = true;
             this.filecontent_textbox.Name = "filecontent_textbox";
-            this.filecontent_textbox.Size = new System.Drawing.Size(252, 262);
+            this.filecontent_textbox.Size = new System.Drawing.Size(296, 248);
             this.filecontent_textbox.TabIndex = 4;
             // 
             // filename_label
             // 
             this.filename_label.AutoSize = true;
             this.filename_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.filename_label.Location = new System.Drawing.Point(1085, 16);
+            this.filename_label.Location = new System.Drawing.Point(730, 368);
             this.filename_label.Name = "filename_label";
             this.filename_label.Size = new System.Drawing.Size(53, 20);
             this.filename_label.TabIndex = 5;
@@ -139,7 +153,7 @@ namespace WindowsFormsApp1
             // 
             this.chose_label.AutoSize = true;
             this.chose_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.chose_label.Location = new System.Drawing.Point(941, 16);
+            this.chose_label.Location = new System.Drawing.Point(4, 13);
             this.chose_label.Name = "chose_label";
             this.chose_label.Size = new System.Drawing.Size(77, 20);
             this.chose_label.TabIndex = 6;
@@ -149,7 +163,7 @@ namespace WindowsFormsApp1
             // 
             this.type_label.AutoSize = true;
             this.type_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.type_label.Location = new System.Drawing.Point(1014, 16);
+            this.type_label.Location = new System.Drawing.Point(670, 368);
             this.type_label.Name = "type_label";
             this.type_label.Size = new System.Drawing.Size(18, 20);
             this.type_label.TabIndex = 7;
@@ -159,24 +173,114 @@ namespace WindowsFormsApp1
             // 
             this.save_button.Enabled = false;
             this.save_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.save_button.Location = new System.Drawing.Point(941, 317);
+            this.save_button.Location = new System.Drawing.Point(868, 310);
             this.save_button.Name = "save_button";
-            this.save_button.Size = new System.Drawing.Size(252, 38);
+            this.save_button.Size = new System.Drawing.Size(311, 38);
             this.save_button.TabIndex = 8;
             this.save_button.Text = "Сохранить содержимое";
             this.save_button.UseVisualStyleBackColor = true;
             this.save_button.Click += new System.EventHandler(this.save_button_Click);
             // 
+            // filename_textBox
+            // 
+            this.filename_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.filename_textBox.Location = new System.Drawing.Point(80, 11);
+            this.filename_textBox.Name = "filename_textBox";
+            this.filename_textBox.Size = new System.Drawing.Size(100, 26);
+            this.filename_textBox.TabIndex = 9;
+            // 
+            // okname_button
+            // 
+            this.okname_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.okname_button.Location = new System.Drawing.Point(186, 11);
+            this.okname_button.Name = "okname_button";
+            this.okname_button.Size = new System.Drawing.Size(116, 26);
+            this.okname_button.TabIndex = 10;
+            this.okname_button.Text = "Переименовать";
+            this.okname_button.UseVisualStyleBackColor = true;
+            this.okname_button.Click += new System.EventHandler(this.okname_button_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.filecontent_textbox);
+            this.panel1.Controls.Add(this.okname_button);
+            this.panel1.Controls.Add(this.filename_textBox);
+            this.panel1.Controls.Add(this.chose_label);
+            this.panel1.Location = new System.Drawing.Point(868, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(311, 299);
+            this.panel1.TabIndex = 11;
+            // 
+            // mft_label
+            // 
+            this.mft_label.AutoSize = true;
+            this.mft_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.mft_label.Location = new System.Drawing.Point(86, 13);
+            this.mft_label.Name = "mft_label";
+            this.mft_label.Size = new System.Drawing.Size(147, 20);
+            this.mft_label.TabIndex = 12;
+            this.mft_label.Text = "Содержимое MFT ";
+            this.mft_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.panel2.Controls.Add(this.mft_label);
+            this.panel2.Location = new System.Drawing.Point(4, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(321, 47);
+            this.panel2.TabIndex = 13;
+            // 
+            // clusters_label
+            // 
+            this.clusters_label.AutoSize = true;
+            this.clusters_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.clusters_label.Location = new System.Drawing.Point(34, 13);
+            this.clusters_label.Name = "clusters_label";
+            this.clusters_label.Size = new System.Drawing.Size(191, 20);
+            this.clusters_label.TabIndex = 14;
+            this.clusters_label.Text = "Содержимое кластеров";
+            // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.panel3.Controls.Add(this.clusters_label);
+            this.panel3.Location = new System.Drawing.Point(331, 3);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(258, 47);
+            this.panel3.TabIndex = 15;
+            // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.panel4.Controls.Add(this.tomstr_label);
+            this.panel4.Location = new System.Drawing.Point(595, 3);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(267, 47);
+            this.panel4.TabIndex = 16;
+            // 
+            // tomstr_label
+            // 
+            this.tomstr_label.AutoSize = true;
+            this.tomstr_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.tomstr_label.Location = new System.Drawing.Point(67, 13);
+            this.tomstr_label.Name = "tomstr_label";
+            this.tomstr_label.Size = new System.Drawing.Size(129, 20);
+            this.tomstr_label.TabIndex = 14;
+            this.tomstr_label.Text = "Структура тома";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1234, 450);
+            this.ClientSize = new System.Drawing.Size(1188, 412);
+            this.Controls.Add(this.panel4);
+            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.save_button);
             this.Controls.Add(this.type_label);
-            this.Controls.Add(this.chose_label);
             this.Controls.Add(this.filename_label);
-            this.Controls.Add(this.filecontent_textbox);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dataGridView2);
@@ -187,6 +291,14 @@ namespace WindowsFormsApp1
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.contextMenuStrip2.ResumeLayout(false);
             this.contextMenuStrip2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -208,6 +320,15 @@ namespace WindowsFormsApp1
         private System.Windows.Forms.Label chose_label;
         private System.Windows.Forms.Label type_label;
         private System.Windows.Forms.Button save_button;
+        private System.Windows.Forms.TextBox filename_textBox;
+        private System.Windows.Forms.Button okname_button;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label mft_label;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label clusters_label;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Label tomstr_label;
     }
 }
 
