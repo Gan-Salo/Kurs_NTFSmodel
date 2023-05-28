@@ -43,6 +43,7 @@ namespace WindowsFormsApp1
             this.filename_label = new System.Windows.Forms.Label();
             this.chose_label = new System.Windows.Forms.Label();
             this.type_label = new System.Windows.Forms.Label();
+            this.save_button = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.contextMenuStrip2.SuspendLayout();
@@ -154,11 +155,24 @@ namespace WindowsFormsApp1
             this.type_label.TabIndex = 7;
             this.type_label.Text = "d";
             // 
+            // save_button
+            // 
+            this.save_button.Enabled = false;
+            this.save_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.save_button.Location = new System.Drawing.Point(941, 317);
+            this.save_button.Name = "save_button";
+            this.save_button.Size = new System.Drawing.Size(252, 38);
+            this.save_button.TabIndex = 8;
+            this.save_button.Text = "Сохранить содержимое";
+            this.save_button.UseVisualStyleBackColor = true;
+            this.save_button.Click += new System.EventHandler(this.save_button_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1234, 450);
+            this.Controls.Add(this.save_button);
             this.Controls.Add(this.type_label);
             this.Controls.Add(this.chose_label);
             this.Controls.Add(this.filename_label);
@@ -193,6 +207,7 @@ namespace WindowsFormsApp1
         private System.Windows.Forms.Label filename_label;
         private System.Windows.Forms.Label chose_label;
         private System.Windows.Forms.Label type_label;
+        private System.Windows.Forms.Button save_button;
     }
 }
 

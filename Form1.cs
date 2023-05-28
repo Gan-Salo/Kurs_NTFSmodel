@@ -14,6 +14,9 @@ namespace WindowsFormsApp1
     {
         public NtfsTom cluster = new NtfsTom();
         //cluster ;
+        // Добавьте поле для хранения выбранного файла
+        private MftEntry selectedFileEntry;
+
         public Form1()
         {
             InitializeComponent();
@@ -156,8 +159,8 @@ namespace WindowsFormsApp1
             var subDir3 = cluster.CreateDirectory("SubDir3", subDir2);
             var subDir4 = cluster.CreateDirectory("SubDir4", subDir3);
             var file3 = cluster.CreateFile("File3.txt", subDir, "Пример содержимого файла 3");
-            cluster.UpdateFileContent(file1, "Првввимер содпппппержимого файла 1");
-
+            //cluster.UpdateFileContent(file1, "Првввимер содпппппержимого файла 1");
+            
             // Покажите контекстное меню в указанной позиции
             //contextMenuStrip2.Show(button1, new Point(0, button1.Height));
 
@@ -348,63 +351,53 @@ namespace WindowsFormsApp1
                 MftEntry selectedEntry = (MftEntry)e.Node.Tag;
                 if (selectedEntry.FileAttributes.Any(attr => attr.AttributeType == AttributeType.File))
                 {
+                    // Если выбран файл, сохраняем ссылку на него
+                    selectedFileEntry = selectedEntry;
                     filecontent_textbox.Text = selectedEntry.Content;
                     filename_label.Text = selectedEntry.FileName;
-                    //foreach (var attr in selectedEntry.FileAttributes)
-                    //{
-                    //    if (attr.AttributeType == AttributeType.File)
-                    //    {
-                    //        type_label.Text = "File";
-                    //        break;
-                    //    }
-                    //    else if (attr.AttributeType == AttributeType.Directory)
-                    //    {
-                    //        type_label.Text = "Directory";
-                    //        break;
-                    //    }
-                    //}
+                    save_button.Enabled = true;
+
                 }
                 else
                 {
+                    selectedFileEntry = null;
                     filecontent_textbox.Text = string.Empty;
                     filename_label.Text = selectedEntry.FileName;
-                    //type_label.Text = selectedEntry.FileAttributes;
-                    //foreach (var attr in selectedEntry.FileAttributes)
-                    //{
-                    //    if (attr.AttributeType == AttributeType.File)
-                    //    {
-                    //        type_label.Text = "File";
-                    //        break;
-                    //    }
-                    //    else if (attr.AttributeType == AttributeType.Directory)
-                    //    {
-                    //        type_label.Text = "Directory";
-                    //        break;
-                    //    }
-                    //}
+                    save_button.Enabled = false;
                 }
             }
             else
             {
+                selectedFileEntry = null;
                 filecontent_textbox.Text = string.Empty;
                 filename_label.Text = string.Empty;
+                save_button.Enabled = false;
             }
         }
 
-        //private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
-        //{
-        //    if (e.Node != null && e.Node.Tag is MftEntry)
-        //    {
-        //        MftEntry selectedEntry = (MftEntry)e.Node.Tag;
-        //        // Теперь у вас есть доступ к выбранному объекту MftEntry
-        //        // Можете использовать его для нужных операций или вывода информации
-        //        // Например:
-        //        MessageBox.Show($"Выбран файл: {selectedEntry.FileName}");
-        //    }
-        //}
-        //private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        // Обработчик события нажатия на кнопку сохранения
+        private void save_button_Click(object sender, EventArgs e)
+        {
+            // Получение выбранного файла из списка или дерева файловой системы
+           // MftEntry selectedFile = GetSelectedFile(); // Здесь GetSelectedFile() - ваш метод получения выбранного файла
+
+            if (selectedFileEntry != null)
+            {
+                // Получение нового содержимого из TextBox
+                string newContent = filecontent_textbox.Text;
+
+                // Обновление содержимого файла в MFT и кластерах
+                cluster.UpdateFileContent(selectedFileEntry, newContent);
+            }
+        }
+        //private void save_button_Click(object sender, EventArgs e)
         //{
 
+        //    if (selectedFileEntry != null)
+        //    {
+        //        // Сохраняем содержимое из textbox в выбранный файл
+        //        selectedFileEntry.Content = filecontent_textbox.Text;
+        //    }
         //}
     }
 
@@ -506,7 +499,7 @@ namespace WindowsFormsApp1
             if (!fileEntry.IsReadOnly)
             {
                 var clusterIndexes = fileEntry.ClusterIndexes;
-
+                fileEntry.Content = newContent;
                 // Освобождение всех кластеров, связанных с файлом
                 foreach (var clusterIndex in clusterIndexes)
                 {
@@ -537,7 +530,6 @@ namespace WindowsFormsApp1
         public void DeleteFile(MftEntry fileEntry)
         {
             
-
             // Освобождение всех кластеров, связанных с файлом
             if (fileEntry.FileAttributes.Any(attr => attr.AttributeType == AttributeType.File) || fileEntry.Content != null)
             {
