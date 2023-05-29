@@ -94,6 +94,7 @@ namespace WindowsFormsApp1
             // 
             // treeView1
             // 
+            this.treeView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.treeView1.Location = new System.Drawing.Point(772, 56);
             this.treeView1.Name = "treeView1";
             this.treeView1.Size = new System.Drawing.Size(224, 341);

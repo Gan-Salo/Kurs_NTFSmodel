@@ -12,19 +12,20 @@ namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
     {
-        public NtfsTom cluster ; 
+        public NtfsTom ntfstom; 
 
         // Добавьте поле для хранения выбранного файла
         private MftEntry selectedFileEntry;
         
         public Form1(string tom_name, int size_cluster, int kolvo_cluster)
         {
-            cluster = new NtfsTom(tom_name, size_cluster, kolvo_cluster);
+            ntfstom = new NtfsTom(tom_name, size_cluster, kolvo_cluster);
             InitializeComponent();
             InitializeContextMenu();
             CreateFilesAndDirectories();
             RefreshAll();
             Load += MainForm_Load; // Добавьте обработчик события Load формы
+           
         }
 
         private void InitializeContextMenu()
@@ -55,6 +56,12 @@ namespace WindowsFormsApp1
         {
             // Handler for adding a directory
             var selectedNode = treeView1.SelectedNode;
+            if (selectedNode == null)
+            {
+                MessageBox.Show("Ошибка. Выберите узел для создания файла.");
+                return;
+            }
+            
             var parentEntry = (MftEntry)selectedNode.Tag;
             // Проверяем, что выбранный узел MFT записи является файлом и выводим ошибку 
             if (parentEntry.FileAttributes.Any(attr => attr.AttributeType == AttributeType.File))
@@ -63,7 +70,7 @@ namespace WindowsFormsApp1
                 return; // Прерываем выполнение кода
             }
 
-            var newDirectory = cluster.CreateDirectory("New Directory", parentEntry);
+            var newDirectory = ntfstom.CreateDirectory("New Directory", parentEntry);
             AddNodeToTreeView(newDirectory, selectedNode);
             dataGridView1.Rows.Clear();
             RefreshAll();
@@ -73,8 +80,14 @@ namespace WindowsFormsApp1
         private void addFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Handler for adding a file
-                var selectedNode = treeView1.SelectedNode;
-                var parentEntry = (MftEntry)selectedNode.Tag;
+            var selectedNode = treeView1.SelectedNode;
+            if (selectedNode == null)
+            {
+                MessageBox.Show("Ошибка. Выберите узел для создания файла.");
+                return;
+            }
+            
+            var parentEntry = (MftEntry)selectedNode.Tag;
 
             // Проверяем, что выбранный узел MFT записи является файлом и выводим ошибку 
             if (parentEntry.FileAttributes.Any(attr => attr.AttributeType == AttributeType.File))
@@ -83,20 +96,31 @@ namespace WindowsFormsApp1
                 return; // Прерываем выполнение кода
             }
 
-            var newFile = cluster.CreateFile("New File.txt", parentEntry, "Example file content");
-                AddNodeToTreeView(newFile, selectedNode);
-                dataGridView1.Rows.Clear();
-                PrintMftEntry(parentEntry);
-                RefreshAll();            
+            var newFile = ntfstom.CreateFile("New File.txt", parentEntry, "Example file content");
+            AddNodeToTreeView(newFile, selectedNode);
+            dataGridView1.Rows.Clear();
+            PrintMftEntry(parentEntry);
+            RefreshAll();            
         }
 
         private void deleteFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Handler for deleting a file
+            //Событие на удаление файла при выборе в контекстном меню соотв. пункта
             var selectedNode = treeView1.SelectedNode;
+            if (selectedNode == null)
+            {
+                MessageBox.Show("Выберите узел для удаления файла или директории.");
+                return;
+            }
+            else if (selectedNode.Parent == null)
+            {
+                MessageBox.Show("Ошибка. Невозможно удалить том целиком.");
+                return;
+            }
             var fileEntry = (MftEntry)selectedNode.Tag;
+
             //var parentEntry = fileEntry.Parent;
-            cluster.DeleteFile(fileEntry);
+            ntfstom.DeleteFile(fileEntry);
             selectedNode.Remove(); 
             RefreshAll();
             //dataGridView1.Rows.Clear();
@@ -105,7 +129,7 @@ namespace WindowsFormsApp1
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         private void PrintMftEntry(MftEntry entry, string indent = "")
@@ -129,7 +153,7 @@ namespace WindowsFormsApp1
             if (entry.FileAttributes.Any(attr => attr.AttributeType == AttributeType.File))
             {
                 dataGridView1.Rows.Add("Cluster Indexes:", string.Join(", ", entry.ClusterIndexes));
-                dataGridView1.Rows.Add("File Content:", entry.Content/*cluster.GetFileContent(entry)*/);
+                dataGridView1.Rows.Add("File Content:", entry.Content/*ntfstom.GetFileContent(entry)*/);
             }
 
             foreach (var subEntry in entry.SubEntries)
@@ -138,54 +162,45 @@ namespace WindowsFormsApp1
             }
         }
 
-        //private void AddNodeToTreeView(MftEntry entry, TreeNode parentNode)
-        //{
-        //    var newNode = new TreeNode(entry.FileName);
-        //    newNode.Tag = entry;
-        //    parentNode.Nodes.Add(newNode);
-        //}
-    
-
         private void PrintAllClustersData()
         {
-            for (int i = 0; i < cluster.ClustersData.Count; i++)
+            for (int i = 0; i < ntfstom.ClustersData.Count; i++)
             {
-                var clusterData = cluster.ClustersData[i];
+                var clusterData = ntfstom.ClustersData[i];
                 if (clusterData != null)
                 {
-                    dataGridView2.Rows.Add($"Cluster {i}:", clusterData);
+                    dataGridView2.Rows.Add($"ntfstom {i}:", clusterData);
                 }
                 else
                 {
-                    dataGridView2.Rows.Add($"Cluster {i}:", "<Empty>");
+                    dataGridView2.Rows.Add($"ntfstom {i}:", "<Empty>");
                 }
             }
         }
         private void CreateFilesAndDirectories()
         {
+            
             dataGridView1.Columns.Add("Name", "Name");
             dataGridView1.Columns.Add("Type", "Type");
 
-            dataGridView2.Columns.Add("Name", "Name");
-            dataGridView2.Columns.Add("Type", "Type");
+            dataGridView2.Columns.Add("Number", "Number");
+            dataGridView2.Columns.Add("Content", "Content");
 
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
             dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
             
-            var root = cluster.CreateDirectory(cluster.tom_name, null);
+            var root = ntfstom.CreateDirectory(ntfstom.tom_name, null);
+            
             // Создание файлов и директорий
-
-            var file1 = cluster.CreateFile("File1.txt", root, "Пример содержимого файла 1");
-            var file2 = cluster.CreateFile("File2.txt", root, "Пример содержимого файла 2");
-            var subDir = cluster.CreateDirectory("SubDir", root);
-            var subDir2 = cluster.CreateDirectory("SubDir2", subDir);
-            var subDir3 = cluster.CreateDirectory("SubDir3", subDir2);
-            var subDir4 = cluster.CreateDirectory("SubDir4", subDir3);
-            var file3 = cluster.CreateFile("File3.txt", subDir, "Пример содержимого файла 3");
-            //cluster.UpdateFileContent(file1, "Првввимер содпппппержимого файла 1");
-            cluster.SetFileReadOnly(file3, true);
-            // Покажите контекстное меню в указанной позиции
-            //contextMenuStrip2.Show(button1, new Point(0, button1.Height));
+            var file1 = ntfstom.CreateFile("File1.txt", root, "Пример содержимого файла 1");
+            var file2 = ntfstom.CreateFile("File2.txt", root, "Пример содержимого файла 2");
+            var subDir = ntfstom.CreateDirectory("SubDir", root);
+            var subDir2 = ntfstom.CreateDirectory("SubDir2", subDir);
+            var subDir3 = ntfstom.CreateDirectory("SubDir3", subDir2);
+            var subDir4 = ntfstom.CreateDirectory("SubDir4", subDir3);
+            var file3 = ntfstom.CreateFile("File3.txt", subDir, "Пример содержимого файла 3");
+            //ntfstom.UpdateFileContent(file1, "Првввимер содпппппержимого файла 1");
+            ntfstom.SetFileReadOnly(file3, true);
 
             //AddNodeToTreeView(root, null);         
         }
@@ -201,15 +216,15 @@ namespace WindowsFormsApp1
             dataGridView1.Rows.Clear();
             dataGridView2.Rows.Clear();
 
-            PopulateTreeView();
-
+            PopulateTreeView();           
+           
             treeView1.AfterSelect += treeView1_AfterSelect;
 
             // Вывод содержимого всех кластеров
             PrintAllClustersData();
 
             // Вывод информации о файлах и директориях
-            PrintMftEntry(GetMftEntryByName(cluster.tom_name));
+            PrintMftEntry(GetMftEntryByName(ntfstom.tom_name));
         }
 
         private void AddNodeToTreeView(MftEntry entry, TreeNode parentNode)
@@ -226,44 +241,9 @@ namespace WindowsFormsApp1
             }
         }
 
-        private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right) // Проверяем, что нажата правая кнопка мыши
-            {
-                treeView1.SelectedNode = e.Node; // Выделяем выбранный узел
-                                                 // Покажите контекстное меню в указанной позиции
-                contextMenuStrip2.Show(treeView1, e.Location);
-            }
-            else if (e.Button == MouseButtons.Left) // Проверяем, что нажата левая кнопка мыши
-            {
-                var selectedNode = e.Node;
-                var selectedEntry = (MftEntry)selectedNode.Tag;
-
-                // Проверяем, является ли выбранный элемент файлом
-                if (selectedEntry.FileAttributes.Any(attr => attr.AttributeType == AttributeType.File))
-                {
-                    // Выводим содержимое файла в TextBox
-                    filecontent_textbox.Text = cluster.GetFileContent(selectedEntry);
-
-                    // Выводим имя файла в Label
-                    okname_button.Text = selectedEntry.FileName;
-                }
-                else
-                {
-                    MessageBox.Show($"Ошибка: {selectedEntry.FileName}");
-                    // Если выбранный элемент является директорией, очищаем TextBox и Label
-                    filecontent_textbox.Text = string.Empty;
-                    okname_button.Text = string.Empty;
-                    filename_label.Text = string.Empty;
-
-                }
-
-            }
-        }
-
         public MftEntry GetMftEntryByName(string fileName)
         {
-            foreach (var entry in cluster.entries)
+            foreach (var entry in ntfstom.entries)
             {
                 if (entry.FileName == fileName)
                 {
@@ -279,7 +259,7 @@ namespace WindowsFormsApp1
             treeView1.Nodes.Clear();
             Dictionary<MftEntry, TreeNode> addedNodes = new Dictionary<MftEntry, TreeNode>();
 
-            foreach (MftEntry entry in cluster.entries)
+            foreach (MftEntry entry in ntfstom.entries)
             {
                 if (!addedNodes.ContainsKey(entry))
                 {
@@ -316,6 +296,7 @@ namespace WindowsFormsApp1
             return node;
         }
 
+        /*Обработка события при нажатии на элемент тома*/
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             
@@ -340,10 +321,17 @@ namespace WindowsFormsApp1
                 {                   
                     // Если выбран файл, сохраняем ссылку на него
                     selectedFileEntry = selectedEntry;
-                    filecontent_textbox.Text = cluster.GetFileContent(selectedEntry)/*selectedEntry.Content */;
+
+                    if (selectedEntry.Content != null)
+                    {
+                        filecontent_textbox.Text = selectedEntry.Content;
+                    }
+                    else
+                    {
+                       filecontent_textbox.Text = ntfstom.GetFileContent(selectedEntry);                                        
+                    }
                     filename_textBox.Text = selectedEntry.FileName;
                     filename_label.Text = selectedEntry.FileName;
-                    //filecontent_textbox.Text = selectedEntry.FileName;
                     save_button.Enabled = true;
                     readonly_button.Enabled = true;
                 }
@@ -371,7 +359,7 @@ namespace WindowsFormsApp1
             
         }
 
-        // Обработчик события нажатия на кнопку сохранения
+        /*Нажатие на кнопку сохранения нового содержимого в файле*/
         private void save_button_Click(object sender, EventArgs e)
         {
             if (selectedFileEntry != null)
@@ -380,14 +368,14 @@ namespace WindowsFormsApp1
                 string newContent = filecontent_textbox.Text;
 
                 // Обновление содержимого файла в MFT и кластерах
-                cluster.UpdateFileContent(selectedFileEntry, newContent);
+                ntfstom.UpdateFileContent(selectedFileEntry, newContent);
                 RefreshAll();
             }
         }
 
+        /*Кнопка переименования*/
         private void okname_button_Click(object sender, EventArgs e)
         {
-            //filename_textBox.Text = null;
             if (selectedFileEntry != null)
             {
                 selectedFileEntry.FileName = filename_textBox.Text;
@@ -395,23 +383,23 @@ namespace WindowsFormsApp1
             }
         }
 
+        /*Кнопка сохранения состояния readonly*/
         private void readonly_button_Click(object sender, EventArgs e)
         {
             if (selectedFileEntry != null)
             {
                 if (readonly_checkBox.Checked)
                 {
-                    cluster.SetFileReadOnly(selectedFileEntry, true);
+                    ntfstom.SetFileReadOnly(selectedFileEntry, true);
                     filename_textBox.Enabled = false;
                     filecontent_textbox.Enabled = false;                  
                 }
                 else
                 {
-                    cluster.SetFileReadOnly(selectedFileEntry, false);
+                    ntfstom.SetFileReadOnly(selectedFileEntry, false);
                     filename_textBox.Enabled = true;
                     filecontent_textbox.Enabled = true;                  
                 }
-
             }
             RefreshAll();
         }
@@ -420,11 +408,12 @@ namespace WindowsFormsApp1
     public class NtfsTom
     {
         public string tom_name;
-        public List<MftEntry> entries;
+        public List<MftEntry> entries;  
         private List<string> clustersData;
-        // Размер кластера в символах
-        private int ClusterSize = 10;
-        private int TotalClusterCount = 20;
+              
+        private int ClusterSize = 10;   // Размер кластера в символах
+
+        private int TotalClusterCount = 20; //Количество кластеров
 
         public List<string> ClustersData => clustersData;
         public IEnumerable<MftEntry> GetMftEntries()
@@ -456,8 +445,6 @@ namespace WindowsFormsApp1
 
                 parentDirectory.SubEntries.Add(fileEntry);
                 entries.Add(fileEntry);
-
-                //Console.WriteLine($"Created file: {fileName} in '{parentDirectory.FileName}'");
                 AllocateClusters(fileEntry, content); // Выделение кластеров и запись содержимого файла              
                 return fileEntry;
             }
@@ -474,7 +461,6 @@ namespace WindowsFormsApp1
 
                 parentDirectory.Parent.SubEntries.Add(fileEntry);
                 entries.Add(fileEntry);
-
                 Console.WriteLine($"Error, you try to add file not to directory. Created file: {fileName} in '{parentDirectory.Parent.FileName}'");
 
                 if (content.Length <= 5 && content.Length > 0)
@@ -513,64 +499,56 @@ namespace WindowsFormsApp1
             return directoryEntry;
         }
 
+        /*Изменение файла или директории*/
         public void UpdateFileContent(MftEntry fileEntry, string newContent)
-        {
-            if (!fileEntry.IsReadOnly)
+        {           
+            var clusterIndexes = fileEntry.ClusterIndexes;
+
+            int freeclusters = FreeClusterCount();
+            //MessageBox.Show($"Свободное место : {freeclusters} кластеров");
+
+            if (newContent.Length > (freeclusters + clusterIndexes.Count) * ClusterSize)
             {
-                var clusterIndexes = fileEntry.ClusterIndexes;
-                //fileEntry.Content = newContent;
-
-                int freeclusters = FreeClusterCount();
-                //MessageBox.Show($"Свободное место : {freeclusters} кластеров");
-
-                if (newContent.Length > (freeclusters + clusterIndexes.Count) * ClusterSize)
+                MessageBox.Show($"Ошибка: Нет места в кластерах для записи содержимого файла.");                               
+            }
+            else
+            {
+                // Освобождение всех кластеров, связанных с файлом
+                foreach (var clusterIndex in clusterIndexes)
                 {
-                    MessageBox.Show($"Ошибка: Нет места в кластерах для записи содержимого файла.");                               
+                    clustersData[clusterIndex] = null;
+                }
+
+                clusterIndexes.Clear();
+
+                /*Если длина содержимого больше 5 символов, то оно сохраняется в кластеры, если меньше или равно - в MFT*/
+                if (newContent.Length <= 5 && newContent.Length > 0)
+                {
+                    fileEntry.Content = newContent;
                 }
                 else
                 {
-                    // Освобождение всех кластеров, связанных с файлом
-                    foreach (var clusterIndex in clusterIndexes)
-                    {
-                        clustersData[clusterIndex] = null;
-                    }
-
-                    clusterIndexes.Clear();
-
-                    if (newContent.Length <= 5 && newContent.Length > 0)
-                    {
-                        fileEntry.Content = newContent;
-                    }
-                    else
-                    {
-                        fileEntry.Content = null;                       
-                        AllocateClusters(fileEntry, newContent);
-                    }
-                    // Запись нового содержимого файла в кластеры
-                    // AllocateClusters(fileEntry, newContent);
-
-                    // Обновление размера файла в записи MFT
-                    var fileSize = (ushort)newContent.Length;
-                    foreach (var attr in fileEntry.FileAttributes)
-                    {
-                        if (attr.AttributeType == AttributeType.File)
-                        {
-                            attr.Value = BitConverter.GetBytes(fileSize)[0];
-                            break;
-                        }
-                    }
-
-                    Console.WriteLine($"Updated content of file: {fileEntry.FileName}");
+                    fileEntry.Content = null;                       
+                    AllocateClusters(fileEntry, newContent);
                 }
-            }
-            else Console.WriteLine($" - can't change, readonly: {fileEntry.FileName}");
-            
+
+                //// Обновление размера файла в записи MFT
+                //var fileSize = (ushort)newContent.Length;
+                //foreach (var attr in fileEntry.FileAttributes)
+                //{
+                //    if (attr.AttributeType == AttributeType.File)
+                //    {
+                //        attr.Value = BitConverter.GetBytes(fileSize)[0];
+                //        break;
+                //    }
+                //}                  
+            }                
         }
 
+        /*Удаление файла или директории*/
         public void DeleteFile(MftEntry fileEntry)
-        {
-            
-            // Освобождение всех кластеров, связанных с файлом
+        {          
+            /*Освобождение всех кластеров, связанных с файлом*/
             if (fileEntry.FileAttributes.Any(attr => attr.AttributeType == AttributeType.File) /*|| fileEntry.Content != null*/)
             {
                 var clusterIndexes = fileEntry.ClusterIndexes;
@@ -579,7 +557,7 @@ namespace WindowsFormsApp1
                     clustersData[clusterIndex] = null;
                 }
             }
-            // Удаление записи из MFT
+            /*Удаление записи из MFT*/
             entries.Remove(fileEntry);
 
             if (fileEntry.SubEntries != null)
@@ -589,17 +567,16 @@ namespace WindowsFormsApp1
                     DeleteFile(subEntry);
                 }
             }
-            // Удаление ссылки на файл у родительской директории
+            
+            /*Удаление ссылки на файл у родительской директории*/
             var parentDirectory = fileEntry.Parent;
             if (parentDirectory != null)
             {
                 parentDirectory.SubEntries.Remove(fileEntry);
             }
-
-            Console.WriteLine($"Deleted file: {fileEntry.FileName}");
         }
 
-        // Выделение кластеров
+        /*Выделение кластеров под содержимое файла*/
         public void AllocateClusters(MftEntry fileEntry, string content)
         {
             string buffer = GetFileContent(fileEntry);
@@ -610,24 +587,16 @@ namespace WindowsFormsApp1
             {            
                 var clusterIndex = GetFreeClusterIndex();
                 int clusterSize = Math.Min(ClusterSize, content.Length - startIndex);
-                var cluster = content.Substring(startIndex, clusterSize);
-
-                if (clusterIndex == -1)
-                {
-                    MessageBox.Show("Ошибка: Нет свободных кластеров для записи содержимого файла.");
-                    AllocateClusters(fileEntry, buffer);
-                    break;
-                }
-                
-                clustersData[clusterIndex] = cluster;
+                var ntfstom = content.Substring(startIndex, clusterSize);               
+                clustersData[clusterIndex] = ntfstom;
                 clusterIndexes.Add(clusterIndex);
-
                 startIndex += clusterSize;
             }
             
             fileEntry.ClusterIndexes = clusterIndexes;
         }
-     
+
+        /*Выдать индекс первого свободного кластера*/
         public int GetFreeClusterIndex()
         {
             for (int i = 0; i < TotalClusterCount; i++)
@@ -635,9 +604,10 @@ namespace WindowsFormsApp1
                 if (string.IsNullOrEmpty(clustersData[i]))
                     return i;
             }
-
             return -1;
         }
+
+        /*Выдать индекс следующего свободного кластера*/
         private int GetNextFreeClusterIndex(int startIndex)
         {
             for (int i = startIndex; i < TotalClusterCount; i++)
@@ -645,9 +615,10 @@ namespace WindowsFormsApp1
                 if (string.IsNullOrEmpty(clustersData[i]))
                     return i;
             }
-
             return -1;
         }
+
+        /*Подсчёт свободных кластеров*/
         public int FreeClusterCount()
         {
             int count = 0;
@@ -666,7 +637,7 @@ namespace WindowsFormsApp1
         {
             entry.IsReadOnly = isReadOnly;
 
-            // Обновление атрибута Read-only в записи MFT для файла
+            //Обновление атрибута Read-only в записи MFT 
             foreach (var attr in entry.FileAttributes)
             {
                 if (attr.AttributeType == AttributeType.File)
@@ -677,6 +648,7 @@ namespace WindowsFormsApp1
             }
         }
         
+        /*Выдача содержимого файла из кластеров*/
         public string GetFileContent(MftEntry fileEntry)
         {
             string content = "";
@@ -685,20 +657,19 @@ namespace WindowsFormsApp1
             {
                 content += clustersData[clusterIndex];
             }
-
             return content;
         }
     }
    
     public class MftEntry
     {
-        public string FileName { get; set; }
-        public List<FileAttribute> FileAttributes { get; set; }
-        public List<MftEntry> SubEntries { get; set; }
-        public MftEntry Parent { get; set; }
-        public List<int> ClusterIndexes { get; set; }
-        public string Content { get; set; }
-        public bool IsReadOnly { get; set; }
+        public string FileName { get; set; } //Имя файла
+        public List<FileAttribute> FileAttributes { get; set; } //Список атрибутов файла
+        public List<MftEntry> SubEntries { get; set; } //Список файлов, на которые имеется указатель
+        public MftEntry Parent { get; set; } //Ссылка на сущность-родителя
+        public List<int> ClusterIndexes { get; set; } //Список номеров кластеров, в которых записано содержимое
+        public string Content { get; set; } //Хранение содержимого в MFT записи, если оно небольшое
+        public bool IsReadOnly { get; set; } //Флаг атрибуты 'только для чтения'
 
         public MftEntry()
         {
@@ -707,12 +678,14 @@ namespace WindowsFormsApp1
         }
     }
 
+    /*Список атрибутов файла*/
     public class FileAttribute
     {
         public AttributeType AttributeType { get; set; }
         public byte Value { get; set; }
     }
 
+    /*Список типов сущности в томе*/
     public enum AttributeType
     {
         File,
