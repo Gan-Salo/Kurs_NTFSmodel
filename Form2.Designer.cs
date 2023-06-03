@@ -128,7 +128,7 @@ namespace WindowsFormsApp1
             this.ClientSize = new System.Drawing.Size(311, 261);
             this.Controls.Add(this.panel1);
             this.Name = "StartForm";
-            this.Text = "Form2";
+            this.Text = "Создание тома";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);

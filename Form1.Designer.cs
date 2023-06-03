@@ -40,9 +40,7 @@ namespace WindowsFormsApp1
             this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.filecontent_textbox = new System.Windows.Forms.TextBox();
-            this.filename_label = new System.Windows.Forms.Label();
             this.chose_label = new System.Windows.Forms.Label();
-            this.type_label = new System.Windows.Forms.Label();
             this.save_button = new System.Windows.Forms.Button();
             this.filename_textBox = new System.Windows.Forms.TextBox();
             this.okname_button = new System.Windows.Forms.Button();
@@ -143,16 +141,6 @@ namespace WindowsFormsApp1
             this.filecontent_textbox.Size = new System.Drawing.Size(292, 248);
             this.filecontent_textbox.TabIndex = 4;
             // 
-            // filename_label
-            // 
-            this.filename_label.AutoSize = true;
-            this.filename_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.filename_label.Location = new System.Drawing.Point(41, 411);
-            this.filename_label.Name = "filename_label";
-            this.filename_label.Size = new System.Drawing.Size(53, 20);
-            this.filename_label.TabIndex = 5;
-            this.filename_label.Text = "name:";
-            // 
             // chose_label
             // 
             this.chose_label.AutoSize = true;
@@ -162,16 +150,6 @@ namespace WindowsFormsApp1
             this.chose_label.Size = new System.Drawing.Size(80, 20);
             this.chose_label.TabIndex = 6;
             this.chose_label.Text = "Выбрано:";
-            // 
-            // type_label
-            // 
-            this.type_label.AutoSize = true;
-            this.type_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.type_label.Location = new System.Drawing.Point(17, 411);
-            this.type_label.Name = "type_label";
-            this.type_label.Size = new System.Drawing.Size(18, 20);
-            this.type_label.TabIndex = 7;
-            this.type_label.Text = "d";
             // 
             // save_button
             // 
@@ -310,14 +288,12 @@ namespace WindowsFormsApp1
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.save_button);
-            this.Controls.Add(this.type_label);
-            this.Controls.Add(this.filename_label);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dataGridView2);
             this.Controls.Add(this.dataGridView1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Структура тома";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.contextMenuStrip2.ResumeLayout(false);
@@ -347,9 +323,7 @@ namespace WindowsFormsApp1
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
         private System.Windows.Forms.TextBox filecontent_textbox;
-        private System.Windows.Forms.Label filename_label;
         private System.Windows.Forms.Label chose_label;
-        private System.Windows.Forms.Label type_label;
         private System.Windows.Forms.Button save_button;
         private System.Windows.Forms.TextBox filename_textBox;
         private System.Windows.Forms.Button okname_button;

@@ -31,8 +31,9 @@ namespace WindowsFormsApp1
                 return; // Прерываем выполнение кода
             }
 
-            if (!int.TryParse(size_textBox.Text, out size_cluster) || !int.TryParse(kolvo_textBox.Text, out kolvo_cluster))
+            if (!int.TryParse(size_textBox.Text, out size_cluster) || !int.TryParse(kolvo_textBox.Text, out kolvo_cluster) || int.Parse(kolvo_textBox.Text) < 0 || int.Parse(size_textBox.Text) < 0)
             {
+                
                 MessageBox.Show("Некорректный формат введенных данных");
                 return; // Прерываем выполнение кода
             }
